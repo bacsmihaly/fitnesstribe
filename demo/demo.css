@@ -1,0 +1,14 @@
+body { padding-bottom: 132px; }
+.demo-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; background: #4A0C11; color: #fff; font-size: .8rem;
+  padding: 8px 14px calc(8px + env(safe-area-inset-bottom, 0px)); display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; justify-content: center;
+}
+.demo-bar button { font: inherit; font-size: 13px; border: 0; border-radius: 7px; padding: 5px 10px; cursor: pointer; background: #EA8C23; color: #241214; font-weight: 700; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.demo-bar button:active { transform: scale(0.97); }
+.demo-bar button.ghost { background: #ffffff22; color: #fff; }
+.demo-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.segs { display: inline-flex; background: #ffffff1f; border-radius: 9px; padding: 2px; }
+.segs .seg { background: transparent; color: #fff; font-weight: 600; }
+.segs .seg.on { background: #fff; color: #4A0C11; }
+.demo-hint { opacity: .7; }
+@media (max-width: 600px) { .demo-hint { display: none; } body { padding-bottom: 170px; } }
