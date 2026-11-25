@@ -1,0 +1,11 @@
+# A weboldal fájljai a web/ mappában vannak; a gyökérből ide irányítunk.
+# A többi mappa (supabase, demo) és a dokumentáció nem nyilvános.
+Options -Indexes
+RewriteEngine On
+
+RewriteRule ^(supabase|demo|\.git)(/|$) - [F,L]
+RewriteRule ^(README|TELEPITES)\.md$ - [F,L]
+
+RewriteRule ^$ web/index.html [L]
+RewriteCond %{REQUEST_URI} !^/web/
+RewriteRule ^(.+)$ web/$1 [L]
