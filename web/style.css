@@ -187,14 +187,19 @@ th { color: var(--muted); font-weight: 600; font-size: .85rem; }
 form { display: flex; flex-direction: column; gap: 12px; }
 label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; font-size: .95rem; }
 label.check { flex-direction: row; align-items: flex-start; gap: 8px; font-weight: 400; font-size: .9rem; }
-label.check input { margin-top: 3px; accent-color: var(--pine); }
+label.check input { margin-top: 1px; }
 input, select, textarea {
   font: inherit; font-size: 16px; /* 16px alatt az iPhone ráközelít a mezőre, és nem zoomol vissza */
   padding: 10px 12px; border: 2px solid var(--mist); border-radius: 10px; background: #fff; color: var(--ink);
   min-width: 0;
 }
 input:focus, select:focus, textarea:focus { outline: none; border-color: var(--pine2); }
-input[type=radio], input[type=checkbox] { accent-color: var(--pine); }
+/* A jelölőnégyzet/rádiógomb ne kapja meg a szövegmezők belső margóját és keretét: attól összezsugorodna a pipa */
+input[type=radio], input[type=checkbox] {
+  accent-color: var(--pine);
+  width: 22px; height: 22px; padding: 0; border: 0; margin: 0;
+  flex: 0 0 22px; cursor: pointer;
+}
 .radio-row { display: flex; gap: 16px; flex-wrap: wrap; }
 .radio-row label { flex-direction: row; align-items: center; gap: 6px; font-weight: 400; }
 .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
@@ -240,6 +245,7 @@ nav .btn.small { color: #fff; }
 .tabs a.active { background: var(--pine); color: #fff; box-shadow: none; }
 .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
 .toolbar input, .toolbar select { padding: 8px 12px; }
+.toolbar input[type=checkbox] { padding: 0; }
 .flag { color: var(--bad); font-weight: 700; font-size: .8rem; }
 .actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .actions input { padding: 6px 8px; font-size: .85rem; min-width: 140px; }
