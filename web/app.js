@@ -1,8 +1,8 @@
 import {
   sb, configured, state, app, t, esc, fmtKm, fmtNum, fmtDate, fmtDateTime, todayStr, eventPhase, countdownTarget, FB_URL, fbIcon,
   loadSettings, loadSession, openPhoto, extractUrl, setBusy,
-} from './common.js?v=3';
-import { renderAdmin } from './admin.js?v=3';
+} from './common.js?v=4';
+import { renderAdmin } from './admin.js?v=4';
 
 const MAX_PHOTO = 5 * 1024 * 1024;
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -127,6 +127,7 @@ function renderBeneficiaries() {
       <p class="page-lead">${t('bene_text')}</p>
       <div class="bene-grid">
         <article class="bene-card">
+          <div class="bene-logo"><img src="logos/ket-kereken.png" alt="${esc(t('bene1_tag'))}" loading="lazy"></div>
           <span class="bene-tag">${t('bene1_tag')}</span>
           <h3>${t('bene1_name')}</h3>
           <p>${t('bene1_text')}</p>
@@ -134,11 +135,13 @@ function renderBeneficiaries() {
           <a class="bene-link" href="https://2kereken.ro" target="_blank" rel="noopener">${t('bene_link')}: 2kereken.ro</a>
         </article>
         <article class="bene-card">
+          <div class="bene-logo"><img src="logos/szent-ferenc-alapitvany.png" alt="${esc(t('bene2_name'))}" loading="lazy"></div>
           <span class="bene-tag">${t('bene2_tag')}</span>
           <h3>${t('bene2_name')}</h3>
           <p>${t('bene2_text')}</p>
         </article>
         <article class="bene-card">
+          <div class="bene-logo"><img src="logos/voroskereszt.png" alt="${esc(t('bene3_name'))}" loading="lazy"></div>
           <span class="bene-tag">${t('bene3_tag')}</span>
           <h3>${t('bene3_name')}</h3>
           <p>${t('bene3_text')}</p>
