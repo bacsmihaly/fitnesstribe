@@ -1,8 +1,8 @@
 import {
   sb, configured, state, app, t, esc, fmtKm, fmtNum, fmtDate, fmtDateTime, todayStr, eventPhase, countdownTarget, FB_URL, fbIcon,
   loadSettings, loadSession, openPhoto, extractUrl, setBusy,
-} from './common.js?v=12';
-import { renderAdmin } from './admin.js?v=12';
+} from './common.js?v=13';
+import { renderAdmin } from './admin.js?v=13';
 
 const MAX_PHOTO = 5 * 1024 * 1024;
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -81,6 +81,13 @@ function renderChrome() {
 // ---------------------------------------------------------------------
 const addDays = (d, n) => { const x = new Date(`${d}T12:00:00Z`); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
 const dayLabel = (d, opts) => new Date(`${d}T12:00:00Z`).toLocaleDateString(state.lang === 'hu' ? 'hu-HU' : 'ro-RO', { timeZone: 'UTC', ...opts });
+/** Teljes dátum évszámmal (pl. 2026. december 1. / 1 decembrie 2026); em=true: HTML, az évszám félkövér */
+const dayFull = (d, em = false) => {
+  const fmt = new Intl.DateTimeFormat(state.lang === 'hu' ? 'hu-HU' : 'ro-RO', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' });
+  const parts = fmt.formatToParts(new Date(`${d}T12:00:00Z`));
+  if (!em) return parts.map((x) => x.value).join('');
+  return parts.map((x) => (x.type === 'year' ? `<b class="yr">${x.value}</b>` : esc(x.value))).join('');
+};
 
 // ---------------------------------------------------------------------
 // Az akcióról és Kiket támogatunk (külön fülek)
@@ -96,7 +103,7 @@ function renderAbout() {
   app().innerHTML = `
     <section class="page">
       <h1>${t('about_title')}</h1>
-      <p class="page-lead">${t('about_lead', { start: dayLabel(s.event_start, { month: 'long', day: 'numeric' }), end: dayLabel(s.event_end, { month: 'long', day: 'numeric' }) })}</p>
+      <p class="page-lead">${t('about_lead', { start: dayFull(s.event_start, true), end: dayFull(s.event_end, true) })}</p>
       <div class="callout"><b>${t('about_open_t')}</b> ${t('about_open_d')}</div>
       <div class="callout fbcall"><span>${t('fb_note')}</span> <a class="btn ghost fb" href="${FB_URL}" target="_blank" rel="noopener">${fbIcon} ${t('fb_btn')}</a></div>
       <dl class="facts">
@@ -179,7 +186,7 @@ async function renderHome() {
     const num = Number(d.slice(8, 10));
     const delay = Math.round(i * 22 + (i % 3) * 9); // enyhén szabálytalan nyitás, hogy ne gépies legyen
     if (d > today) {
-      return `<button class="door future" disabled style="animation-delay:${delay}ms" aria-label="${esc(dayLabel(d, { month: 'long', day: 'numeric' }))}">
+      return `<button class="door future" disabled style="animation-delay:${delay}ms" aria-label="${esc(dayFull(d))}">
         <span class="d">${num}</span><span class="km">${esc(dayLabel(d, { month: 'short' }))}</span></button>`;
     }
     const x = daily.get(d);
@@ -196,8 +203,8 @@ async function renderHome() {
 
   const title = days.length === 21 ? t('adv_title_21') : t('adv_title_n', { n: days.length });
   const totalSub = phase === 'before'
-    ? t('adv_total_before', { start: dayLabel(s.event_start, { month: 'long', day: 'numeric' }) })
-    : t('adv_total_sub', { runners: fmtNum(stats.active_runners), days: Math.min(passed, days.length) });
+    ? t('adv_total_before', { start: dayFull(s.event_start, true) })
+    : esc(t('adv_total_sub', { runners: fmtNum(stats.active_runners), days: Math.min(passed, days.length) }));
   const cta = state.session
     ? (phase === 'closed' ? '' : `<a class="btn" href="#/profil">${t('adv_submit_today')}</a>`)
     : (phase === 'closed' ? '' : `<a class="btn" href="#/regisztracio">${t('adv_join')}</a><a class="btn ghost" href="#/belepes">${t('nav_login')}</a>`);
@@ -213,7 +220,7 @@ async function renderHome() {
     <aside class="banner" role="note">
       <div class="banner-copy">
         <strong>${t('banner_title')}</strong>
-        <span>${t('banner_text', { start: dayLabel(s.event_start, { month: 'long', day: 'numeric' }) })}</span>
+        <span>${t('banner_text', { start: dayFull(s.event_start, true) })}</span>
       </div>
       <a class="btn" href="#/regisztracio">${t('banner_btn')}</a>
     </aside>` : '';
@@ -232,7 +239,7 @@ async function renderHome() {
             <div><b data-u="m">00</b><small>${t('cd_m')}</small></div>
             <div><b data-u="s">00</b><small>${t('cd_s')}</small></div>
           </div></div>` : ''}
-        <div class="total"><b>${fmtKm(stats.total_km, 0)} km</b><span>${esc(totalSub)}</span></div>
+        <div class="total"><b>${fmtKm(stats.total_km, 0)} km</b><span>${totalSub}</span></div>
         <div class="cta-row">${cta}<a class="btn ghost fb" href="${FB_URL}" target="_blank" rel="noopener">${fbIcon} ${t('fb_btn')}</a></div>
         <p class="fb-note">${t('fb_note')}</p>
       </div>
@@ -288,7 +295,7 @@ async function renderHome() {
     door.setAttribute('aria-pressed', 'true');
     const d = door.dataset.day;
     const x = daily.get(d);
-    const date = dayLabel(d, { month: 'long', day: 'numeric' });
+    const date = dayFull(d);
     let txt = x ? t('adv_note_day', { date, km: fmtKm(x.km, 0), n: fmtNum(x.runners) }) : t('adv_note_day_empty', { date });
     if (d === today) txt += ` ${t('adv_note_today')}`;
     note.textContent = txt.charAt(0).toUpperCase() + txt.slice(1);
@@ -299,7 +306,7 @@ async function renderHome() {
   const body = document.getElementById('lbbody');
   const runsCache = new Map();
   const runsHtml = (list) => list.length
-    ? `<ul class="runs">${list.map((x) => `<li><span>${esc(dayLabel(String(x.run_date).slice(0, 10), { month: 'long', day: 'numeric' }))}</span><b>${fmtKm(x.km)} km</b></li>`).join('')}</ul>`
+    ? `<ul class="runs">${list.map((x) => `<li><span>${esc(dayFull(String(x.run_date).slice(0, 10)))}</span><b>${fmtKm(x.km)} km</b></li>`).join('')}</ul>`
     : `<p class="muted">${t('lb_runs_empty')}</p>`;
   const draw = (q = '') => {
     const ql = q.trim().toLowerCase();

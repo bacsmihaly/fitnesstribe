@@ -1,7 +1,7 @@
 // Admin felület – csak magyarul (egy admin felhasználó van)
 import {
   sb, state, app, esc, fetchAll, loadSettings, openPhoto, downloadCsv, csvNum, toLocalInput, setBusy,
-} from './common.js?v=12';
+} from './common.js?v=13';
 
 const hu = (n, d = 2) => Number(n || 0).toLocaleString('hu-HU', { minimumFractionDigits: d, maximumFractionDigits: d });
 const huDate = (d) => (d ? String(d).slice(0, 10).replaceAll('-', '.') + '.' : '');

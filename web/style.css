@@ -370,3 +370,6 @@ td.email { font-size: .85rem; overflow-wrap: anywhere; min-width: 180px; }
 .banner-copy strong { font-weight: 800; font-size: clamp(1.3rem, 3vw, 1.75rem); line-height: 1.15; }
 .banner-copy span { font-size: 1rem; line-height: 1.45; opacity: .95; max-width: 62ch; }
 .banner .btn { white-space: nowrap; background: var(--gold); color: var(--ink); }
+
+b.yr { font-weight: 800; color: var(--berry); }
+.banner b.yr { color: var(--gold); }
