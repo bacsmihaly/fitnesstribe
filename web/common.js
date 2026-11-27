@@ -1,6 +1,6 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js?v=13';
-import { dict } from './i18n.js?v=13';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js?v=14';
+import { dict } from './i18n.js?v=14';
 
 export const configured = !SUPABASE_URL.includes('IDE-A-') && !SUPABASE_ANON_KEY.includes('IDE-A-');
 export const sb = configured ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;

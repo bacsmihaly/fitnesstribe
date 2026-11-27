@@ -1,8 +1,8 @@
 import {
   sb, configured, state, app, t, esc, fmtKm, fmtNum, fmtDate, fmtDateTime, todayStr, eventPhase, countdownTarget, FB_URL, fbIcon,
   loadSettings, loadSession, openPhoto, extractUrl, setBusy,
-} from './common.js?v=13';
-import { renderAdmin } from './admin.js?v=13';
+} from './common.js?v=14';
+import { renderAdmin } from './admin.js?v=14';
 
 const MAX_PHOTO = 5 * 1024 * 1024;
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -77,7 +77,7 @@ function renderChrome() {
 }
 
 // ---------------------------------------------------------------------
-// Főoldal: adventi naptár (napi km), összesítő, ranglista, ajándékozók
+// Főoldal: adventi naptár (napi km), összesítő, ranglista, adakozók
 // ---------------------------------------------------------------------
 const addDays = (d, n) => { const x = new Date(`${d}T12:00:00Z`); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
 const dayLabel = (d, opts) => new Date(`${d}T12:00:00Z`).toLocaleDateString(state.lang === 'hu' ? 'hu-HU' : 'ro-RO', { timeZone: 'UTC', ...opts });
