@@ -168,7 +168,7 @@ h1, h2 { letter-spacing: -0.015em; color: var(--pine); }
 .bene-logo { height: 120px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
 .bene-logo img { max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain; display: block; }
 .bene-card h3 { text-align: center; margin: 6px 0 8px; font-size: 1.25rem; font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; }
-.bene-card p { margin: 0 0 8px; line-height: 1.5; }
+.bene-card p { text-align: center; margin: 0 0 8px; line-height: 1.5; }
 .bene-tag { display: block; text-align: center; font-size: .85rem; font-weight: 600; color: var(--pine2); }
 .bene-link { display: block; text-align: center; margin-top: 4px; font-weight: 700; color: var(--berry); text-underline-offset: 3px; padding: 6px 0; }
 @media (max-width: 860px) { .bene-grid { grid-template-columns: 1fr; } }
