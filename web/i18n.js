@@ -163,6 +163,7 @@ export const dict = {
     bene_link: 'Tudj meg többet',
     proof_manual: 'Szervezők rögzítették',
     footer: 'Szervező: Fitness Tribe, Sepsiszentgyörgy',
+    contact_label: 'Kérdésed van? Írj nekünk:',
   },
   ro: {
     brand: 'Cu kilometri pentru copii',
@@ -328,5 +329,6 @@ export const dict = {
     bene_link: 'Află mai multe',
     proof_manual: 'Înregistrat de organizatori',
     footer: 'Organizator: Fitness Tribe, Sfântu Gheorghe',
+    contact_label: 'Ai întrebări? Scrie-ne:',
   },
 };

@@ -360,3 +360,7 @@ td.email { font-size: .85rem; overflow-wrap: anywhere; min-width: 180px; }
 .hb-logo img { max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain; display: block; }
 .hb-name { font-weight: 700; font-size: .95rem; line-height: 1.25; overflow-wrap: anywhere; }
 @media (max-width: 560px) { .hb-list { grid-template-columns: 1fr; } }
+
+.contact-line { margin-bottom: 6px; font-size: .95rem; color: var(--ink, inherit); }
+.contact-box { padding: 12px 16px; border-radius: 12px; background: var(--card); box-shadow: inset 0 0 0 1px var(--mist); font-weight: 600; overflow-wrap: anywhere; }
+.contact-box a { color: var(--berry); font-weight: 800; }

@@ -1,8 +1,8 @@
 import {
   sb, configured, state, app, t, esc, fmtKm, fmtNum, fmtDate, fmtDateTime, todayStr, eventPhase, countdownTarget, FB_URL, fbIcon,
   loadSettings, loadSession, openPhoto, extractUrl, setBusy,
-} from './common.js?v=9';
-import { renderAdmin } from './admin.js?v=9';
+} from './common.js?v=10';
+import { renderAdmin } from './admin.js?v=10';
 
 const MAX_PHOTO = 5 * 1024 * 1024;
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -46,7 +46,7 @@ function renderChrome() {
   document.getElementById('brand-t').textContent = t('brand');
   document.getElementById('brand-e').textContent = t('subtitle');
   document.title = t('doc_title');
-  document.getElementById('footer').innerHTML = `${esc(t('footer'))} · <a href="${FB_URL}" target="_blank" rel="noopener">${fbIcon} Facebook</a>`;
+  document.getElementById('footer').innerHTML = `<div class="contact-line">${esc(t('contact_label'))} <a href="mailto:fitnesstribegroup@gmail.com">fitnesstribegroup@gmail.com</a></div>${esc(t('footer'))} · <a href="${FB_URL}" target="_blank" rel="noopener">${fbIcon} Facebook</a>`;
   const r = currentRoute();
   const link = (href, key, label) =>
     `<a href="${href}" class="${r === key ? 'active' : ''}">${label}</a>`;
@@ -116,6 +116,7 @@ function renderAbout() {
       <p>${t('about_km', { price: fmtNum(s.km_price) })}</p>
       ${t('about_hashtag') ? `<p>${t('about_share')} <b>${t('about_hashtag')}</b></p>` : ''}
       <p><a href="#/tamogatottak">${t('about_to_bene')}</a></p>
+      <p class="contact-box">${t('contact_label')} <a href="mailto:fitnesstribegroup@gmail.com">fitnesstribegroup@gmail.com</a></p>
       <div class="cta-row">${cta}</div>
     </section>`;
 }
