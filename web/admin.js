@@ -1,7 +1,7 @@
 // Admin felület – csak magyarul (egy admin felhasználó van)
 import {
   sb, state, app, esc, fetchAll, loadSettings, openPhoto, downloadCsv, csvNum, toLocalInput, setBusy,
-} from './common.js?v=4';
+} from './common.js?v=9';
 
 const hu = (n, d = 2) => Number(n || 0).toLocaleString('hu-HU', { minimumFractionDigits: d, maximumFractionDigits: d });
 const huDate = (d) => (d ? String(d).slice(0, 10).replaceAll('-', '.') + '.' : '');
@@ -58,7 +58,20 @@ async function activitiesTab(pane) {
   for (const a of acts) counts[a.status]++;
   const approvedKm = acts.filter((a) => a.status === 'approved').reduce((x, a) => x + Number(a.km), 0);
 
+  const todayIso = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Bucharest' });
   pane.innerHTML = `
+    <section class="card">
+      <h2>Futás rögzítése futó helyett</h2>
+      <p class="muted">A futás azonnal elfogadott lesz, mintha a futó küldte volna be. A dátumra és a km-re itt nincs korlát, a határidő sem érvényes.</p>
+      <form id="manualForm" class="toolbar" autocomplete="off">
+        <input id="mRunner" list="mRunners" placeholder="Futó neve vagy e-mailje…" required style="min-width:240px">
+        <datalist id="mRunners">${profiles.map((p) => `<option value="${esc(p.full_name)} (${esc(p.email)})"></option>`).join('')}</datalist>
+        <input id="mDate" type="date" value="${todayIso}" required>
+        <input id="mKm" type="number" step="0.01" min="0.01" max="1000" placeholder="km" required style="width:110px">
+        <button class="btn small" type="submit">Futás rögzítése</button>
+      </form>
+      <p class="muted" id="mMsg" aria-live="polite"></p>
+    </section>
     <section class="card">
       <div class="row-between">
         <h2>Beküldések</h2>
@@ -96,9 +109,11 @@ async function activitiesTab(pane) {
   const rowHtml = (a) => {
     const p = byId.get(a.runner_id) || {};
     const dup = a.status !== 'rejected' && dupCount.get(dupKey(a)) > 1;
-    const proof = a.proof_type === 'link'
-      ? `<a href="${esc(a.proof_url)}" target="_blank" rel="noopener">Link ↗</a>`
-      : `<a href="#" data-photo="${esc(a.photo_path)}">Kép</a>`;
+    const proof = a.proof_type === 'manual'
+      ? '<span class="muted">admin rögzítette</span>'
+      : a.proof_type === 'link'
+        ? `<a href="${esc(a.proof_url)}" target="_blank" rel="noopener">Link ↗</a>`
+        : `<a href="#" data-photo="${esc(a.photo_path)}">Kép</a>`;
     const act = a.status === 'pending'
       ? `<button class="btn ok small" data-ok="${a.id}">Elfogad</button>
          <input placeholder="Elutasítás oka…" data-reason="${a.id}" enterkeyhint="done">
@@ -177,12 +192,40 @@ async function activitiesTab(pane) {
   fName.oninput = draw;
   fDup.onchange = draw;
 
+  // Kézi rögzítés: az admin által felvitt futás azonnal elfogadott
+  const byLabel = new Map(profiles.map((p) => [`${p.full_name} (${p.email})`.toLowerCase(), p]));
+  document.getElementById('manualForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('mMsg');
+    const btn = e.target.querySelector('button');
+    const key = document.getElementById('mRunner').value.trim().toLowerCase();
+    const matches = byLabel.get(key)
+      ? [byLabel.get(key)]
+      : profiles.filter((p) => p.full_name.toLowerCase() === key || p.email.toLowerCase() === key);
+    if (matches.length !== 1) {
+      msg.textContent = matches.length ? 'Több futó is egyezik – válaszd ki a listából név + e-mail szerint.' : 'Nincs ilyen futó. Válassz a listából.';
+      return;
+    }
+    const p = matches[0];
+    const date = document.getElementById('mDate').value;
+    const km = Number(document.getElementById('mKm').value);
+    if (!date || !(km > 0)) { msg.textContent = 'Adj meg dátumot és pozitív km-et.'; return; }
+    if (!confirm(`${p.full_name}: ${hu(km)} km, ${huDate(date)}. Rögzítsem elfogadott futásként?`)) return;
+    setBusy(btn, true);
+    const { error } = await sb.from('activities').insert({
+      runner_id: p.id, run_date: date, km, proof_type: 'manual', status: 'approved', reviewed_at: new Date().toISOString(),
+    });
+    setBusy(btn, false);
+    if (error) { msg.textContent = `Hiba: ${error.message}`; return; }
+    await renderAdmin();
+  };
+
   document.getElementById('expActs').onclick = () => {
     const rows = [['ID', 'Beküldve', 'Futó', 'E-mail', 'Befizetett', 'Futás dátuma', 'Km', 'Igazolás típusa', 'Link', 'Kép', 'Állapot', 'Elutasítás oka']];
     for (const a of acts) {
       const p = byId.get(a.runner_id) || {};
       rows.push([a.id, huDT(a.created_at), p.full_name, p.email, p.paid ? 'igen' : 'nem', a.run_date, csvNum(a.km),
-        a.proof_type === 'link' ? 'link' : 'kép', a.proof_url || '', a.photo_path || '', ST[a.status][1], a.reject_reason || '']);
+        a.proof_type === 'manual' ? 'admin' : a.proof_type === 'link' ? 'link' : 'kép', a.proof_url || '', a.photo_path || '', ST[a.status][1], a.reject_reason || '']);
     }
     downloadCsv(`futasok_${new Date().toISOString().slice(0, 10)}.csv`, rows);
   };

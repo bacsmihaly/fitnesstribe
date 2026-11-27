@@ -1,8 +1,8 @@
 import {
   sb, configured, state, app, t, esc, fmtKm, fmtNum, fmtDate, fmtDateTime, todayStr, eventPhase, countdownTarget, FB_URL, fbIcon,
   loadSettings, loadSession, openPhoto, extractUrl, setBusy,
-} from './common.js?v=4';
-import { renderAdmin } from './admin.js?v=4';
+} from './common.js?v=9';
+import { renderAdmin } from './admin.js?v=9';
 
 const MAX_PHOTO = 5 * 1024 * 1024;
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -511,9 +511,11 @@ async function renderProfile() {
     const reason = a.status === 'rejected' && a.reject_reason ? `<div class="reason">${esc(a.reject_reason)}</div>` : '';
     return `<span class="badge ${cls}">${t(`st_${a.status}`)}</span>${reason}`;
   };
-  const proofCell = (a) => (a.proof_type === 'link'
-    ? `<a href="${esc(a.proof_url)}" target="_blank" rel="noopener">${t('open_link')} ↗</a>`
-    : `<a href="#" data-photo="${esc(a.photo_path)}">${t('view_photo')}</a>`);
+  const proofCell = (a) => (a.proof_type === 'manual'
+    ? `<span class="muted">${t('proof_manual')}</span>`
+    : a.proof_type === 'link'
+      ? `<a href="${esc(a.proof_url)}" target="_blank" rel="noopener">${t('open_link')} ↗</a>`
+      : `<a href="#" data-photo="${esc(a.photo_path)}">${t('view_photo')}</a>`);
 
   app().innerHTML = `
     <section class="card">

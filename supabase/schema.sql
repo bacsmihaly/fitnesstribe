@@ -102,7 +102,7 @@ create table public.activities (
   runner_id     uuid not null references public.profiles on delete cascade,
   run_date      date not null,
   km            numeric(6,2) not null check (km > 0),
-  proof_type    text not null check (proof_type in ('link', 'photo')),
+  proof_type    text not null check (proof_type in ('link', 'photo', 'manual')),
   proof_url     text,
   photo_path    text,
   status        text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
@@ -111,7 +111,8 @@ create table public.activities (
   reviewed_at   timestamptz,
   constraint proof_present check (coalesce(
     (proof_type = 'link'  and proof_url ~* '^https?://') or
-    (proof_type = 'photo' and photo_path is not null), false))
+    (proof_type = 'photo' and photo_path is not null) or
+    (proof_type = 'manual'), false))
 );
 create index activities_runner_idx on public.activities (runner_id);
 create index activities_status_idx on public.activities (status);

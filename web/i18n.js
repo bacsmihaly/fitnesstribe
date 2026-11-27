@@ -161,6 +161,7 @@ export const dict = {
     bene3_tag: 'Nyári tábor',
     bene3_text: 'Nyári tábor nehéz körülmények között élő gyerekeknek.',
     bene_link: 'Tudj meg többet',
+    proof_manual: 'Szervezők rögzítették',
     footer: 'Szervező: Fitness Tribe, Sepsiszentgyörgy',
   },
   ro: {
@@ -325,6 +326,7 @@ export const dict = {
     bene3_tag: 'Tabără de vară',
     bene3_text: 'Tabără de vară pentru copii care trăiesc în condiții grele.',
     bene_link: 'Află mai multe',
+    proof_manual: 'Înregistrat de organizatori',
     footer: 'Organizator: Fitness Tribe, Sfântu Gheorghe',
   },
 };
