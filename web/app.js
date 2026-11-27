@@ -1,8 +1,8 @@
 import {
   sb, configured, state, app, t, esc, fmtKm, fmtNum, fmtDate, fmtDateTime, todayStr, eventPhase, countdownTarget, FB_URL, fbIcon,
   loadSettings, loadSession, openPhoto, extractUrl, setBusy,
-} from './common.js?v=11';
-import { renderAdmin } from './admin.js?v=11';
+} from './common.js?v=12';
+import { renderAdmin } from './admin.js?v=12';
 
 const MAX_PHOTO = 5 * 1024 * 1024;
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -209,7 +209,17 @@ async function renderHome() {
     return `<li>${x.website ? `<a href="${esc(x.website)}" target="_blank" rel="noopener">${inner}</a>` : inner}</li>`;
   }).join('');
 
+  const banner = phase === 'before' && !state.session ? `
+    <aside class="banner" role="note">
+      <div class="banner-copy">
+        <strong>${t('banner_title')}</strong>
+        <span>${t('banner_text', { start: dayLabel(s.event_start, { month: 'long', day: 'numeric' }) })}</span>
+      </div>
+      <a class="btn" href="#/regisztracio">${t('banner_btn')}</a>
+    </aside>` : '';
+
   app().innerHTML = `
+    ${banner}
     <section class="adv">
       <div class="adv-intro">
         <h1>${esc(title)}</h1>

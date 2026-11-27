@@ -364,3 +364,9 @@ td.email { font-size: .85rem; overflow-wrap: anywhere; min-width: 180px; }
 .contact-line { margin-bottom: 6px; font-size: .95rem; color: var(--ink, inherit); }
 .contact-box { padding: 12px 16px; border-radius: 12px; background: var(--card); box-shadow: inset 0 0 0 1px var(--mist); font-weight: 600; overflow-wrap: anywhere; }
 .contact-box a { color: var(--berry); font-weight: 800; }
+
+.banner { display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; margin: 4px 0 20px; padding: 18px 22px; border-radius: 16px; background: var(--pine); color: #fff; border-bottom: 5px solid var(--gold); }
+.banner-copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1 1 320px; }
+.banner-copy strong { font-weight: 800; font-size: clamp(1.3rem, 3vw, 1.75rem); line-height: 1.15; }
+.banner-copy span { font-size: 1rem; line-height: 1.45; opacity: .95; max-width: 62ch; }
+.banner .btn { white-space: nowrap; background: var(--gold); color: var(--ink); }
