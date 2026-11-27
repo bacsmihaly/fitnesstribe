@@ -1,8 +1,8 @@
 import {
   sb, configured, state, app, t, esc, fmtKm, fmtNum, fmtDate, fmtDateTime, todayStr, eventPhase, countdownTarget, FB_URL, fbIcon,
   loadSettings, loadSession, openPhoto, extractUrl, setBusy,
-} from './common.js?v=10';
-import { renderAdmin } from './admin.js?v=10';
+} from './common.js?v=11';
+import { renderAdmin } from './admin.js?v=11';
 
 const MAX_PHOTO = 5 * 1024 * 1024;
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -339,7 +339,8 @@ function renderRegister() {
       <form id="f" novalidate>
         <label>${t('f_full_name')}<input name="full_name" required minlength="3" maxlength="80" autocomplete="name" autocapitalize="words"></label>
         <label>${t('f_email')}<input name="email" type="email" required autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false"></label>
-        <label>${t('f_phone')} <span class="muted">(${t('optional')})</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel"></label>
+        <label>${t('f_city')}<input name="city" required minlength="2" maxlength="80" autocomplete="address-level2" autocapitalize="words"></label>
+        <label>${t('f_phone')}<input name="phone" type="tel" required minlength="6" maxlength="30" autocomplete="tel" inputmode="tel"></label>
         <label>${t('f_password')}<input name="password" type="password" required minlength="8" autocomplete="new-password"></label>
         <label>${t('f_password2')}<input name="password2" type="password" required minlength="8" autocomplete="new-password"></label>
         <label class="check"><input type="checkbox" name="consent" required><span>${t('f_consent')}</span></label>
@@ -364,7 +365,7 @@ function renderRegister() {
       email: String(fd.get('email')).trim(),
       password: String(fd.get('password')),
       options: {
-        data: { full_name: fullName, phone: String(fd.get('phone') || '').trim() },
+        data: { full_name: fullName, phone: String(fd.get('phone') || '').trim(), city: String(fd.get('city') || '').trim().replace(/\s+/g, ' ') },
         emailRedirectTo: location.origin + location.pathname,
       },
     });

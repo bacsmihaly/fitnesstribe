@@ -45,6 +45,7 @@ create table public.profiles (
   full_name     text not null check (char_length(btrim(full_name)) between 3 and 80),
   email         text not null,
   phone         text,
+  city          text,
   consent_at    timestamptz not null default now(),
   paid          boolean not null default false,
   paid_at       timestamptz,
@@ -57,12 +58,13 @@ returns trigger
 language plpgsql security definer set search_path = public
 as $$
 begin
-  insert into public.profiles (id, full_name, email, phone)
+  insert into public.profiles (id, full_name, email, phone, city)
   values (
     new.id,
     regexp_replace(btrim(coalesce(new.raw_user_meta_data->>'full_name', '')), '\s+', ' ', 'g'),
     new.email,
-    nullif(btrim(coalesce(new.raw_user_meta_data->>'phone', '')), '')
+    nullif(btrim(coalesce(new.raw_user_meta_data->>'phone', '')), ''),
+    nullif(btrim(coalesce(new.raw_user_meta_data->>'city', '')), '')
   );
   return new;
 end $$;

@@ -1,7 +1,7 @@
 // Admin felület – csak magyarul (egy admin felhasználó van)
 import {
   sb, state, app, esc, fetchAll, loadSettings, openPhoto, downloadCsv, csvNum, toLocalInput, setBusy,
-} from './common.js?v=10';
+} from './common.js?v=11';
 
 const hu = (n, d = 2) => Number(n || 0).toLocaleString('hu-HU', { minimumFractionDigits: d, maximumFractionDigits: d });
 const huDate = (d) => (d ? String(d).slice(0, 10).replaceAll('-', '.') + '.' : '');
@@ -256,7 +256,7 @@ async function runnersTab(pane) {
       <p class="muted">Regisztrált: <b>${profiles.length}</b> · Befizetés visszaigazolva: <b>${paidCount}</b> ·
         Nem fizetett, de van elfogadott km-je: <b>${unpaidWithKm}</b> (ezek nem számítanak a ranglistán)</p>
       <div class="toolbar">
-        <input id="q" type="search" placeholder="Név vagy e-mail…">
+        <input id="q" type="search" placeholder="Név, e-mail vagy település…">
         <select id="fPaid"><option value="all">Mind</option><option value="unpaid">Nem fizetett</option><option value="paid">Fizetett</option></select>
       </div>
       <div class="table-wrap"><table>
@@ -270,11 +270,11 @@ async function runnersTab(pane) {
     const q = document.getElementById('q').value.trim().toLowerCase();
     const fp = document.getElementById('fPaid').value;
     const list = profiles.filter((p) =>
-      (!q || p.full_name.toLowerCase().includes(q) || p.email.toLowerCase().includes(q))
+      (!q || p.full_name.toLowerCase().includes(q) || p.email.toLowerCase().includes(q) || (p.city || '').toLowerCase().includes(q))
       && (fp === 'all' || (fp === 'paid') === p.paid));
     tb.innerHTML = list.map((p) => `<tr>
       <td><input value="${esc(p.full_name)}" data-name="${p.id}" title="${esc(p.full_name)} – javítás: írd át, Enter ment"></td>
-      <td class="email">${esc(p.email)}${p.phone ? `<br><span class="muted">${esc(p.phone)}</span>` : ''}</td>
+      <td class="email">${esc(p.email)}${p.phone ? `<br><span class="muted">${esc(p.phone)}</span>` : ''}${p.city ? `<br><span class="muted">${esc(p.city)}</span>` : ''}</td>
       <td class="muted nowrap hide-sm" style="font-size:.8rem">${huShort(p.created_at)}</td>
       <td><label class="check nowrap"><input type="checkbox" data-paid="${p.id}" ${p.paid ? 'checked' : ''}>
         <span class="muted" style="font-size:.8rem">${p.paid_at ? huShort(p.paid_at) : ''}</span></label></td>
@@ -306,9 +306,9 @@ async function runnersTab(pane) {
   document.getElementById('fPaid').onchange = draw;
 
   document.getElementById('exp').onclick = () => {
-    const rows = [['Név', 'E-mail', 'Telefon', 'Regisztrált', 'Befizetve', 'Befizetés rögzítve', 'Megjegyzés', 'Elfogadott km', 'Függő futás']];
+    const rows = [['Név', 'E-mail', 'Telefon', 'Település', 'Regisztrált', 'Befizetve', 'Befizetés rögzítve', 'Megjegyzés', 'Elfogadott km', 'Függő futás']];
     for (const p of profiles) {
-      rows.push([p.full_name, p.email, p.phone || '', huDT(p.created_at), p.paid ? 'igen' : 'nem', huDT(p.paid_at),
+      rows.push([p.full_name, p.email, p.phone || '', p.city || '', huDT(p.created_at), p.paid ? 'igen' : 'nem', huDT(p.paid_at),
         p.payment_note || '', csvNum((km.get(p.id) || 0).toFixed(2)), pend.get(p.id) || 0]);
     }
     downloadCsv(`futok_${new Date().toISOString().slice(0, 10)}.csv`, rows);
