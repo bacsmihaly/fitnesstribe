@@ -236,6 +236,14 @@ async function renderHome() {
         <p style="margin:0 0 12px">${t('gifts_text', { price: fmtNum(s.km_price) })}</p>
         ${gifts ? `<ul class="gifts">${gifts}</ul>` : `<p class="muted">${t('sponsors_empty')}</p>`}
       </div>
+    </section>
+    <section class="home-bene">
+      <h2>${t('bene_title')}</h2>
+      <ul class="hb-list">
+        <li><a href="#/tamogatottak"><span class="hb-logo"><img src="logos/ket-kereken.png" alt="" loading="lazy"></span><span class="hb-name">${t('bene1_tag')}</span></a></li>
+        <li><a href="#/tamogatottak"><span class="hb-logo"><img src="logos/szent-ferenc-alapitvany.png" alt="" loading="lazy"></span><span class="hb-name">${t('bene2_name')}</span></a></li>
+        <li><a href="#/tamogatottak"><span class="hb-logo"><img src="logos/voroskereszt.png" alt="" loading="lazy"></span><span class="hb-name">${t('bene3_name')}</span></a></li>
+      </ul>
     </section>`;
 
   // Visszaszámláló (másodpercenként frissül, amíg az oldal látszik)
