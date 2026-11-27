@@ -121,6 +121,9 @@ function renderAbout() {
 }
 
 function renderBeneficiaries() {
+  const redCross = state.lang === 'ro'
+    ? { url: 'https://www.crucearosie-cv.org/', label: 'crucearosie-cv.org' }
+    : { url: 'https://voroskereszt-km.org/', label: 'voroskereszt-km.org' };
   app().innerHTML = `
     <section class="page bene">
       <h1>${t('bene_title')}</h1>
@@ -139,12 +142,14 @@ function renderBeneficiaries() {
           <span class="bene-tag">${t('bene2_tag')}</span>
           <h3>${t('bene2_name')}</h3>
           <p>${t('bene2_text')}</p>
+          <a class="bene-link" href="https://www.magnificat.ro/" target="_blank" rel="noopener">${t('bene_link')}: magnificat.ro</a>
         </article>
         <article class="bene-card">
           <div class="bene-logo"><img src="logos/voroskereszt.png" alt="${esc(t('bene3_name'))}" loading="lazy"></div>
           <span class="bene-tag">${t('bene3_tag')}</span>
           <h3>${t('bene3_name')}</h3>
           <p>${t('bene3_text')}</p>
+          <a class="bene-link" href="${redCross.url}" target="_blank" rel="noopener">${t('bene_link')}: ${redCross.label}</a>
         </article>
       </div>
     </section>`;
